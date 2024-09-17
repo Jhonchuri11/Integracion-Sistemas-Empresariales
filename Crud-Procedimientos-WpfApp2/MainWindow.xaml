@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Crud_Procedimientos_WpfApp2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="200" Width="400">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="250"/>
+        </Grid.ColumnDefinitions>
+        <!-- Campo para nombre -->
+        <TextBlock Grid.Row="0" Margin="10" VerticalAlignment="Center">Nombre del gato:</TextBlock>
+        <TextBox Grid.Row="0" Margin="10" VerticalAlignment="Center" Name="txtNombre"/>
+
+        <!-- Campo 2: Edad -->
+        <TextBlock Grid.Row="1" Margin="10" VerticalAlignment="Center">Email:</TextBlock>
+        <TextBox Grid.Row="1" Margin="10" VerticalAlignment="Center" Name="txtEdad"/>
+
+        <!-- Botón -->
+        <Button Grid.Row="2" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100"
+                Content="Registrar"  Background="green" Foreground="Azure" Click="Button_Click" />
+
+        <Button Grid.Row="0" Grid.Column="2" Name="ListCat" Content="Listar Gatos" Width="75" Height="20" Click="ListCat_Click" />
+        <DataGrid Grid.Row="1" Grid.Column="2" x:Name="listGatos" Margin="20, 10, 20, 20" >
+            
+        </DataGrid>
     </Grid>
 </Window>
