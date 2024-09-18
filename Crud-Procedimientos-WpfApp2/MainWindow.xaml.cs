@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SqlCommand = Microsoft.Data.SqlClient.SqlCommand;
+using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
+using SqlDataReader = Microsoft.Data.SqlClient.SqlDataReader;
+using SqlParameter = Microsoft.Data.SqlClient.SqlParameter;
 
 namespace Crud_Procedimientos_WpfApp2
 {
@@ -23,95 +28,108 @@ namespace Crud_Procedimientos_WpfApp2
             InitializeComponent();
         }
 
-        // Registrar un gato
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Clientes cli = new Clientes();
+
+            cli.Show();
+
+        }
+
+        // Para listar los clientes
+        private void Button_Click_1_Listar(object sender, RoutedEventArgs e)
         {
             try
             {
-                string connectionString = "Server=DEV\\SQLEXPRESS; Database=Lab03DB; Integrated Security=True; TrustServerCertificate=True;";
+                string SQLconnection = "Server=DEV\\SQLEXPRESS;Database=Neptuno;User ID=userNeptuno;Password=123456;" +
+                    "TrustServerCertificate=True;";
 
 
-                SqlConnection connection = new SqlConnection(connectionString);
+                SqlConnection conection = new SqlConnection(SQLconnection);
+
+                conection.Open();
+
+                SqlCommand command = new SqlCommand("PA_listarClientes", conection);
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Listar clientes
+                List<Client> lisClientes = new List<Client>();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Client clientes = new Client();
+
+                    clientes.idCLiente = reader["idcliente"].ToString();
+                    clientes.nombreCompañia = reader["nombrecompañia"].ToString();
+                    clientes.nombreContacto = reader["nombrecontacto"].ToString();
+                    clientes.CargoContacto = reader["cargocontacto"].ToString();
+                    clientes.direccion = reader["direccion"].ToString();
+                    lisClientes.Add(clientes);
+                }
+
+                conection.Close();
+
+                listClient.ItemsSource = lisClientes;
+            }
+            catch (Exception ex)
+
+            {
+                MessageBox.Show("Erro en consulta");
+                throw;
+            }
+        }
+
+        // Para crear los clientes
+        private void registerClient_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string SQLconnection = "Server=DEV\\SQLEXPRESS;Database=Neptuno;User ID=userNeptuno;Password=123456;" +
+                    "TrustServerCertificate=True;";
+
+                SqlConnection connection = new SqlConnection(SQLconnection);
 
                 connection.Open();
 
-                // Se usa para relizar una consulta, siempre tomando en cuenta el uso de procedimientos al
-                // macenados
-                SqlCommand command = new SqlCommand("LA_insertCat", connection);
+                // comando
+                SqlCommand command = new SqlCommand("PA_insertClientes", connection);
+
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Usamos  el sqlparameter para definir los campos a utilizar
-                SqlParameter parameter1 = new SqlParameter("@Name", SqlDbType.VarChar, 100);
-                parameter1.Value = txtNombre.Text;
+                SqlParameter parameter1 = new SqlParameter("@idCliente", SqlDbType.VarChar, 20);
+                parameter1.Value = txtIdClient.Text;
 
-                SqlParameter parameter2 = new SqlParameter("@Age", SqlDbType.Int);
-                parameter2.Value = txtEdad.Text;
+                SqlParameter parameter2 = new SqlParameter("@NombreCompañia", SqlDbType.VarChar, 100);
+                parameter2.Value = txtNameCompany.Text;
+
+                SqlParameter parameter3 = new SqlParameter("@NombreContacto", SqlDbType.VarChar, 100);
+                parameter3.Value = txtNameContact.Text;
+
+                SqlParameter parameter4 = new SqlParameter("@CargoContacto", SqlDbType.VarChar, 100);
+                parameter4.Value = txtCargContact.Text;
+
+                SqlParameter parameter5 = new SqlParameter("@Direccion", SqlDbType.VarChar, 100);
+                parameter5.Value = txtDirection.Text;
 
                 command.Parameters.Add(parameter1);
                 command.Parameters.Add(parameter2);
+                command.Parameters.Add(parameter3);
+                command.Parameters.Add(parameter4);
+                command.Parameters.Add(parameter5);
 
                 command.ExecuteNonQuery();
 
                 connection.Close();
 
-                MessageBox.Show("Registro existoso");
+                MessageBox.Show("Se creo correctamente");
             }
-            catch (Exception ex)
+            catch
+            (Exception ex)
             {
-
-                MessageBox.Show("Error en el registro");
-
-                throw;
-
-            }
-
-        }
-
-        private void ListCat_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string connectionString = "Server=DEV\\SQLEXPRESS; Database=Lab03DB; Integrated Security=True; TrustServerCertificate=True;";
-
-                // Conection
-                SqlConnection connection = new SqlConnection(connectionString);
-
-                connection.Open();
-
-
-                // Comando
-                SqlCommand command = new SqlCommand("LA_listaGatos", connection);
-
-                command.CommandType = CommandType.StoredProcedure;
-
-                // Creamos nuestra clase y lo llamamos
-
-                List<Cat> listCat = new List<Cat>();
-
-                // Usamos el reader : conectado
-                SqlDataReader sqlDataReader = command.ExecuteReader();
-
-                while (sqlDataReader.Read())
-                {
-                    Cat cats = new Cat();
-
-                    cats.CatId = Convert.ToInt32(sqlDataReader["catid"]);
-                    cats.Name = sqlDataReader["name"].ToString();
-                    cats.Age = Convert.ToInt32(sqlDataReader["age"]);
-                    listCat.Add(cats);
-
-                }
-
-                // Cerramos la conexion
-                connection.Close();
-
-                // Llamos el nombre de data grid
-                listGatos.ItemsSource = listCat;
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show("Error en la consulta");
+                MessageBox.Show("Error de consulta en bd");
                 throw;
             }
         }

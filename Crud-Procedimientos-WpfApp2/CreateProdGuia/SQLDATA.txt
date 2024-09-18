@@ -1,0 +1,87 @@
+use Neptuno
+select * from clientes;
+
+-- Agregando un nuevo campo en Activo en Clientes
+ALTER TABLE clientes ADD Activo BIT;
+
+UPDATE clientes
+SET Activo = 1;
+
+-- Creando procedimiento Listar Clientes
+ALTER PROC PA_listarClientes
+AS
+BEGIN
+SELECT
+idCliente,NombreCompañia,NombreContacto,
+CargoContacto,Direccion
+FROM clientes
+END
+
+PA_listarClientes
+
+--- Procedimiento para crear un nuevo cliente
+INSERT INTO clientes (idCliente,NombreCompañia,NombreContacto,CargoContacto,Direccion)
+VALUES('AB','Nuevo','J','P','AV.1')
+--
+CREATE PROC PA_insertClientes
+@idCliente VARCHAR,
+@NombreCompañia VARCHAR(200),
+@NombreContacto VARCHAR(200),
+@CargoContacto VARCHAR(200),
+@Direccion VARCHAR(100)
+AS
+BEGIN
+INSERT INTO clientes (idCliente,NombreCompañia,NombreContacto,CargoContacto,Direccion)
+VALUES(@idCliente,@NombreCompañia,@NombreContacto,@CargoContacto,@Direccion)
+END
+
+PA_insertClientes 'JC','Nuevo-2','Jh','PA','AV'
+
+sp_help clientes;
+
+SELECT * FROM CLIENTES;
+--- Procedimiento actualizar cliente
+CREATE PROC PA_updateClientes
+@idCliente VARCHAR(20),@NombreCompañia VARCHAR(200),
+@NombreContacto VARCHAR(200),@CargoContacto VARCHAR(200),
+@Direccion VARCHAR(100),@Ciudad VARCHAR(100),
+@Region VARCHAR(100),@CodPostal VARCHAR(100),
+@Pais VARCHAR(100),@Telefono VARCHAR(100),@FAX VARCHAR(100),@ACTIVO BIT
+AS
+BEGIN
+UPDATE clientes
+SET NombreCompañia=@NombreCompañia,NombreContacto=@NombreContacto,
+CargoContacto=@CargoContacto,Direccion=@Direccion,Ciudad=@Ciudad,
+Region=@Region,CodPostal=@CodPostal,Pais=@Pais,Telefono=@Telefono,
+Fax=@FAX,Activo=@ACTIVO
+WHERE idCliente = @idCliente
+END
+
+PA_listarClientes
+
+EXEC PA_updateClientes
+    @idCliente = 'ANTON',
+    @NombreCompañia = 'Compañía XYZ',
+    @NombreContacto = 'Juan Perez',
+    @CargoContacto = 'Gerente',
+    @Direccion = 'Av. Siempre Viva 123',
+    @Ciudad = 'Lima',
+    @Region = 'Lima',
+    @CodPostal = '15000',
+    @Pais = 'Perú',
+    @Telefono = '999999999',
+    @FAX = '123456789',
+    @ACTIVO = 1; 
+
+-- ELIMINACIÓN LÓGICA DE CLIENTES
+CREATE PROC LA_deleteClientes
+@idCliente VARCHAR(20)
+AS
+BEGIN
+UPDATE clientes SET Activo = 0
+WHERE idCliente = @idCliente
+END
+
+LA_deleteClientes 'ANTON'
+
+select * from clientes
