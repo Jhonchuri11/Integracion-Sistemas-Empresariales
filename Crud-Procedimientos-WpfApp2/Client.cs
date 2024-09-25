@@ -19,5 +19,18 @@ namespace Crud_Procedimientos_WpfApp2
 
         public string direccion { get; set; }
 
+        public string ciudad {  get; set; }
+
+        public string region { get; set; }
+
+        public string codPostal { get; set; }
+
+        public string pais { get; set; }
+
+        public string telefono { get; set; }
+
+        public string fax { get; set; }
+        public int activo { get; set; }
+
     }
 }
