@@ -1,0 +1,48 @@
+﻿<Window x:Class="Capas_Practice_WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Capas_Practice_WpfApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="380" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <!-- FORM OF REGISTER -->
+        <StackPanel Grid.Column="0" Margin="10">
+            <TextBlock Text="COD CLIENTE:" Margin="5"/>
+            <TextBox Margin="5" Name="txtIdClient"/>
+
+            <TextBlock Text="Nombre compañia:" Margin="5"/>
+            <TextBox Margin="5" Name="txtNameCompany"/>
+
+            <TextBlock Text="Nombre contacto:" Margin="5"/>
+            <TextBox Margin="5" Name="txtNameContact"/>
+
+            <TextBlock Text="Cargo contacto:" Margin="5"/>
+            <TextBox Margin="5" Name="txtCargContact"/>
+
+            <TextBlock Text="Dirección:" Margin="5"/>
+            <TextBox Margin="5" Name="txtDirection"/>
+
+            <Button Content="Registrar" Name="registerClient" Click="registerClient_Click" Margin="5" Width="100" Foreground="AliceBlue"  Background="green" />
+
+            <Button Content="Actualizar" Name="actualizarClient" Click="actualizarClient_Click" Margin="5" Width="100"  Background="Blue" Foreground="White"/>
+
+            <Button Content="Eliminar" Name="eliminarClient" Click="eliminarClient_Click" Width="100" Background="red" Foreground="White"/>
+        </StackPanel>
+
+        <!-- TABLE OF CLIENT-->
+        <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical">
+            <Button Grid.Column="1" Content="Listar clientes" Width="100"  Background="blue" Foreground="Aqua" Height="20" Click="Button_ListarClient"/>
+            <DataGrid Grid.Column="1" Name="listClient" Height="500" Margin="10">
+
+            </DataGrid>
+
+        </StackPanel>
+    </Grid>
+</Window>
